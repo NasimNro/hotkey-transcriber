@@ -95,4 +95,3 @@ Logs werden in `whisper_transcriber.log` gespeichert.
 - Audio wird an OpenAI Whisper API gesendet (siehe OpenAI Datenschutzrichtlinien)
 
 
-**Viel Spaß mit Ihrem neuen Sprache-zu-Text-Tool! 🎉**
