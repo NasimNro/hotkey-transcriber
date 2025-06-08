@@ -15,7 +15,6 @@ Eine Windows-Anwendung für Sprache-zu-Text-Transkription mit OpenAI Whisper API
 
 ```bashgit push -u origin main
 git clone https://github.com/NasimNro/hotkey-transcriber.git
-
 ```
 
 ### 2. Python-Abhängigkeiten installieren
