@@ -1,4 +1,4 @@
-# 🎤 Whisper Transcriber
+# 🎤 Hotkey Transcriber
 
 Eine Windows-Anwendung für Sprache-zu-Text-Transkription mit OpenAI Whisper API.
 
@@ -13,7 +13,7 @@ Eine Windows-Anwendung für Sprache-zu-Text-Transkription mit OpenAI Whisper API
 
 ### 1. Repository klonen
 
-```bash
+```bashgit push -u origin main
 git clone <repository-url>
 cd whisper-transcriber
 ```
