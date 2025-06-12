@@ -1,9 +1,8 @@
 pynput==1.7.6
 sounddevice==0.4.6
 soundfile==0.12.1
-numpy==1.24.3
+numpy==1.26.4
 openai==1.84.0
-pywin32==306
 python-dotenv==1.0.0
 requests==2.31.0
 pyperclip==1.8.2 

@@ -1,14 +1,13 @@
 """
 Text Injection Service - Handles inserting transcribed text into active input field
-Uses Windows clipboard and keyboard simulation to insert text
+Uses the clipboard and keyboard simulation to insert text
 """
 
 import time
 import logging
 import pyperclip
 from pynput.keyboard import Key, Controller
-import win32gui
-import win32con
+import subprocess
 
 class TextInjectionService:
     def __init__(self):
@@ -123,50 +122,26 @@ class TextInjectionService:
             return False
     
     def _get_active_window_info(self) -> str:
-        """Get information about the currently active window"""
+        """Get information about the currently active window on Linux"""
         try:
-            # Get active window handle
-            hwnd = win32gui.GetForegroundWindow()
-            
-            # Get window title
-            window_title = win32gui.GetWindowText(hwnd)
-            
-            # Get window class name
-            class_name = win32gui.GetClassName(hwnd)
-            
-            return f"{window_title} ({class_name})"
-            
+            # Using xdotool to get active window title on Linux
+            result = subprocess.run(
+                ['xdotool', 'getactivewindow', 'getwindowname'],
+                capture_output=True, text=True, check=True
+            )
+            window_title = result.stdout.strip()
+            return f"{window_title} (Linux/X11)"
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            # xdotool might not be installed or might fail
+            self.logger.warning("Failed to get active window info. Is xdotool installed?")
+            return "Unknown Window (Linux)"
         except Exception as e:
             self.logger.error(f"Failed to get active window info: {e}")
             return "Unknown Window"
     
     def is_input_field_active(self) -> bool:
         """
-        Check if an input field is currently active/focused
-        This is a basic implementation - can be enhanced
+        Check if an input field is currently active/focused.
+        This check is simplified for Linux and defaults to True.
         """
-        try:
-            # Get active window
-            hwnd = win32gui.GetForegroundWindow()
-            class_name = win32gui.GetClassName(hwnd)
-            
-            # Common input field class names
-            input_classes = [
-                'Edit',           # Standard Windows edit control
-                'RichEdit',       # Rich text edit control
-                'Chrome_WidgetWin_1',  # Chrome/Edge browser
-                'MozillaWindowClass',  # Firefox
-                'Notepad',        # Notepad
-                'WordPadClass',   # WordPad
-            ]
-            
-            # Check if current window is likely an input field
-            for input_class in input_classes:
-                if input_class.lower() in class_name.lower():
-                    return True
-            
-            return True  # Default to True - let user decide when to use
-            
-        except Exception as e:
-            self.logger.error(f"Failed to check input field status: {e}")
-            return True  # Default to True on error 
+        return True 
