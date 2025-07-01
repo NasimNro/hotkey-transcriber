@@ -43,7 +43,8 @@ Es ist essenziell, eine virtuelle Umgebung (venv) zu verwenden, um die Projekt-A
 python3 -m venv venv
 
 # Umgebung aktivieren (dieser Schritt muss in jeder neuen Terminalsitzung wiederholt werden)
-source venv/bin/activate
+
+
 ```
 *Nach der Aktivierung erscheint `(venv)` am Anfang Ihrer Kommandozeilen-Eingabe.*
 
