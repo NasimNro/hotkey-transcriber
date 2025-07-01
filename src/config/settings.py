@@ -19,11 +19,12 @@ class Settings:
         self.audio_sample_rate = 16000  # Optimal for Whisper
         self.audio_channels = 1         # Mono
         self.audio_chunk_size = 1024
+        self.min_audio_duration = 2.0   # Minimum duration in seconds for transcription
         
         self.max_audio_file_size = 25 * 1024 * 1024  # 25MB (Whisper API limit)
         
         # Keyboard Configuration
-        self.hotkey_combination = "ctrl+shift"
+        self.hotkey_combination = "ctrl+windows"
         
         # Logging Configuration
         self.log_level = logging.INFO

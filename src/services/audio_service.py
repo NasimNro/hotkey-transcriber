@@ -13,15 +13,23 @@ import numpy as np
 from typing import Optional
 
 class AudioService:
-    def __init__(self):
+    def __init__(self, settings=None):
         self.recording_data = []
         self.is_recording = False
         self.temp_file_path: Optional[str] = None
         self.logger = logging.getLogger(__name__)
         
-        # Audio settings
-        self.channels = 1
-        self.rate = 16000  # 16kHz is optimal for Whisper
+        # Use settings if provided, otherwise use defaults
+        if settings:
+            self.channels = settings.audio_channels
+            self.rate = settings.audio_sample_rate
+            self.min_duration = settings.min_audio_duration
+        else:
+            # Fallback defaults
+            self.channels = 1
+            self.rate = 16000
+            self.min_duration = 2.0
+            
         self.dtype = np.float32
         
     def start_recording(self):
@@ -56,14 +64,25 @@ class AudioService:
             if hasattr(self, 'recording_thread'):
                 self.recording_thread.join(timeout=2.0)
             
-            # Save recorded audio to temporary file
-            if self.recording_data:
-                self.temp_file_path = self._save_audio_to_temp_file()
-                self.logger.info(f"Audio saved to: {self.temp_file_path}")
-                return self.temp_file_path
-            else:
+            # Check if we have recorded audio
+            if not self.recording_data:
                 self.logger.warning("No audio data recorded")
                 return None
+            
+            # Calculate audio duration
+            audio_duration = len(self.recording_data) / self.rate
+            self.logger.info(f"Recorded audio duration: {audio_duration:.2f} seconds")
+            
+            # Check minimum duration (2 seconds)
+            if audio_duration < self.min_duration:
+                self.logger.info(f"Audio too short ({audio_duration:.2f}s < {self.min_duration}s), skipping transcription")
+                print(f"⏱️ Aufnahme zu kurz ({audio_duration:.1f}s) - wird ignoriert")
+                return None
+            
+            # Save recorded audio to temporary file
+            self.temp_file_path = self._save_audio_to_temp_file()
+            self.logger.info(f"Audio saved to: {self.temp_file_path}")
+            return self.temp_file_path
                 
         except Exception as e:
             self.logger.error(f"Failed to stop audio recording: {e}")

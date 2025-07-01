@@ -1,6 +1,6 @@
 """
 Keyboard Service - Handles global hotkey detection
-Listens for Ctrl+Shift combination to trigger recording
+Listens for Ctrl+Windows combination to trigger recording
 """
 
 import threading
@@ -15,7 +15,7 @@ class KeyboardService:
         self.listener: Optional[keyboard.Listener] = None
         self.is_recording = False
         self.ctrl_pressed = False
-        self.shift_pressed = False
+        self.win_pressed = False
         self.logger = logging.getLogger(__name__)
         
     def start_listening(self):
@@ -26,9 +26,9 @@ class KeyboardService:
                 on_release=self._on_key_release
             )
             self.listener.start()
-            self.logger.info("Keyboard listener started - Waiting for Ctrl+Shift...")
+            self.logger.info("Keyboard listener started - Waiting for Ctrl+Windows...")
             print("🎤 Whisper Transcriber gestartet!")
-            print("📝 Drücken Sie Ctrl+Shift zum Aufnehmen")
+            print("📝 Drücken Sie Ctrl+Windows zum Aufnehmen")
             
         except Exception as e:
             self.logger.error(f"Failed to start keyboard listener: {e}")
@@ -47,12 +47,15 @@ class KeyboardService:
             if key == keyboard.Key.ctrl_l or key == keyboard.Key.ctrl_r:
                 self.ctrl_pressed = True
                 
-            # Check for Shift key
-            elif key == keyboard.Key.shift_l or key == keyboard.Key.shift_r:
-                self.shift_pressed = True
+            # Check for Windows key (Super key on Linux, cmd on other systems)
+            elif (key == keyboard.Key.cmd or 
+                  key == keyboard.Key.cmd_l or 
+                  key == keyboard.Key.cmd_r or
+                  str(key) == "Key.cmd"):
+                self.win_pressed = True
             
-            # If both Ctrl and Shift are pressed and we're not already recording
-            if self.ctrl_pressed and self.shift_pressed and not self.is_recording:
+            # If both Ctrl and Windows key are pressed and we're not already recording
+            if self.ctrl_pressed and self.win_pressed and not self.is_recording:
                 self.is_recording = True
                 self.logger.info("Hotkey activated - Starting recording")
                 print("🔴 Aufnahme gestartet...")
@@ -68,12 +71,15 @@ class KeyboardService:
             if key == keyboard.Key.ctrl_l or key == keyboard.Key.ctrl_r:
                 self.ctrl_pressed = False
                 
-            # Check for Shift key release  
-            elif key == keyboard.Key.shift_l or key == keyboard.Key.shift_r:
-                self.shift_pressed = False
+            # Check for Windows key release
+            elif (key == keyboard.Key.cmd or 
+                  key == keyboard.Key.cmd_l or 
+                  key == keyboard.Key.cmd_r or
+                  str(key) == "Key.cmd"):
+                self.win_pressed = False
             
             # If either key is released and we're recording, stop recording
-            if self.is_recording and (not self.ctrl_pressed or not self.shift_pressed):
+            if self.is_recording and (not self.ctrl_pressed or not self.win_pressed):
                 self.is_recording = False
                 self.logger.info("Hotkey released - Stopping recording")
                 print("⏹️ Aufnahme beendet - Transkribiere...")

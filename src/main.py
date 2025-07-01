@@ -23,7 +23,7 @@ class WhisperTranscribers:
         self.logger = logging.getLogger(__name__)
         
         # Initialize services
-        self.audio_service = AudioService()
+        self.audio_service = AudioService(self.settings)
         self.transcription_service = TranscriptionService(self.settings.openai_api_key)
         self.text_injection_service = TextInjectionService()
         self.keyboard_service = KeyboardService(
@@ -45,7 +45,7 @@ class WhisperTranscribers:
             print("=" * 60)
             print("✅ Anwendung gestartet!")
             print("🔥 Bereit für Sprachaufnahme")
-            print("📋 Tastenkombination: Ctrl + Shift")
+            print("📋 Tastenkombination: Ctrl + Windows")
             print("🛑 Zum Beenden: Ctrl + C")
             print("=" * 60)
             

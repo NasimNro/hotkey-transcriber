@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Whisper Transcriber
+Comment=Voice-to-text transcription with Ctrl+Windows hotkey
+Exec=/home/nasim/Desktop/hotkey-transcriber/start_transcriber.sh
+Icon=/home/nasim/Desktop/hotkey-transcriber/transcriber-icon.png
+Terminal=true
+StartupNotify=true
+Categories=Utility;Audio;Office;
+Keywords=voice;transcription;speech;text;whisper;
+StartupWMClass=whisper-transcriber 
